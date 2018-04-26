@@ -1,0 +1,13 @@
+.well {
+    max-width: 400px;
+    margin-top: 200px;
+}
+
+.administrator p {
+    font-size: 20px;
+}
+
+.loader {
+    background: transparent;
+    width: 20px;
+}

@@ -1,0 +1,44 @@
+server {
+ listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/test2/public_html;
+    index index.php;
+    server_name test2.webmastersnn.ru;
+
+	error_log /var/www/test2/error.log;
+	
+	location ~ \.php$ {
+	    include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+    }
+
+	location ~ /\.ht {
+        deny all;
+	}
+	
+	location ~* ^.+\.(js|css)$ {
+		#old style: add_header Cache-Control "no-store, no-cache, must-revalidate, post-check=0, pre-check=0";
+		#old style: add_header Pragma "no-cache";
+		expires -1;
+		sendfile off;
+	}
+
+	location / {
+        if ($http_host ~* "^www\.(.*)"){
+            rewrite ^(.*)$ http://%1/$1 redirect;
+        }
+        if (!-e $request_filename){
+            rewrite ^(.*)$ /index.php?query_string=$uri;
+        }
+	}
+
+	location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+	location ~ index.(php)$ {
+	    allow all;
+	}
+}
